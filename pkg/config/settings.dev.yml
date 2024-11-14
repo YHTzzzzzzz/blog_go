@@ -1,0 +1,10 @@
+server: # 应用配置
+  env: dev # 环境名称
+  port: 9999 # 端口
+  name: blog_site # 应用名称
+  version: v0.1.0 # 应用版本
+author:
+  name: yinht
+  email: 1802057802@qq.com
+  github: https://github.com/YHTzzzzzzz
+
