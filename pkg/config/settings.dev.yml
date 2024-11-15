@@ -3,6 +3,7 @@ server: # 应用配置
   port: 9999 # 端口
   name: blog_site # 应用名称
   version: v0.1.0 # 应用版本
+  locale: zh ## 语言环境 zh | en
 author:
   name: yinht
   email: 1802057802@qq.com

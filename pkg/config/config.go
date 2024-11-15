@@ -18,6 +18,7 @@ type appConfig struct {
 	Port    string `mapstructure:"port" json:"port" yaml:"port" toml:"port"`
 	Name    string `mapstructure:"name" json:"name" yaml:"name" toml:"name"`
 	Version string `mapstructure:"version" json:"version" yaml:"version" toml:"version"`
+	Locale  string `mapstructure:"locale" json:"locale" yaml:"locale" toml:"locale"`
 }
 
 type authorInfo struct {
