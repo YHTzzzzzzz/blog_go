@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"blog_go/pkg/config"
+	"blog_go/pkg/middleware"
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -52,15 +53,19 @@ func init() {
 	// 可以在项目启动前做一些初始化配置
 	cobra.OnInitialize(initConfig)
 
-	// 定义子命令共享标签
+	// 定义子命令共享标签 定义标签  config 缩写 -c 默认值 pkg/config/settings.yml 描述信息： Path to the configuration file
 	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "pkg/config/settings.yml", "Path to the configuration file")
-	fmt.Println(configFile)
+	//fmt.Println(configFile)
 
 	rootCmd.AddCommand(serverCmd)
 }
 
 func initConfig() {
+	// 读取配置文件
 	if err := config.LoadConfiguration(configFile); err != nil {
 		log.Fatal("Error loading configuration: ", err)
 	}
+
+	// 初始化 validator 翻译器
+	middleware.InitValidator()
 }

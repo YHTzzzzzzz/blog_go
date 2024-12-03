@@ -24,8 +24,8 @@ var validate = validator.New()
 // 创建全局的翻译器实例
 var trans ut.Translator
 
-// todo 翻译器未生效
-func init() {
+// InitValidator 初始化 validator 翻译器 todo 翻译器未生效
+func InitValidator() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		// 注册获取json tag的方法
 		v.RegisterTagNameFunc(func(fld reflect.StructField) string {
@@ -36,23 +36,21 @@ func init() {
 			return name
 		})
 
+		// 创建翻译器实例
 		zhT := zh.New()
 		enT := en.New()
-
 		uni := ut.New(enT, zhT)
 
-		var ok bool
-		// 获取翻译器
+		// 根据当前配置获取对应语言
 		locale := config.ServerConfigInstance.AppConfigInstance.Locale
-		trans, ok = uni.GetTranslator(locale)
-		if !ok {
-			fmt.Println("uni.GetTranslator(", locale, ") failed")
-			fmt.Println("use default zh translator")
-			trans, _ = uni.GetTranslator(global.LanguageZh)
+		trans, _ = uni.GetTranslator(locale)
+		if trans == nil {
+			fmt.Println("Error loading translator for locale:", locale)
+			trans, _ = uni.GetTranslator(global.LanguageZh) // 默认使用中文
 		}
 
-		var err error
 		// 注册翻译器
+		var err error
 		switch locale {
 		case "en":
 			err = enTranslations.RegisterDefaultTranslations(v, trans)
@@ -61,8 +59,9 @@ func init() {
 		default:
 			err = zhTranslations.RegisterDefaultTranslations(v, trans)
 		}
+
 		if err != nil {
-			fmt.Println("registerDefaultTranslations failed:", err)
+			fmt.Println("Error registering translations:", err)
 		}
 	}
 }
