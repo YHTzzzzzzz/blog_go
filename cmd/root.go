@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"blog_go/pkg/config"
-	"blog_go/pkg/middleware"
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -67,5 +66,5 @@ func initConfig() {
 	}
 
 	// 初始化 validator 翻译器
-	middleware.InitValidator()
+	config.InitValidator()
 }
