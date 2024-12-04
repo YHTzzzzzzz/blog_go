@@ -17,6 +17,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	// 请求参数绑定结构体
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.Error(err)
 		return
 	}
 
