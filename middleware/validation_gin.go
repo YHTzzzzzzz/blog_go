@@ -1,11 +1,10 @@
 package middleware
 
 import (
-	"blog_go/config"
+	"blog_go/global"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"net/http"
 )
 
 //	todo 重复错误 结构{
@@ -17,7 +16,7 @@ import (
 //	   ]
 //	}
 //
-// CustomValidation 自定义错误转换器 -- 需要显示的使用 c.Error(err) 添加错误
+// CustomValidation 自定义 gin 错误转换器中间件 -- 需要显示的使用 c.Error(err) 添加错误
 func CustomValidation() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 直接执行 其他中间件 && 逻辑处理
@@ -33,7 +32,7 @@ func CustomValidation() gin.HandlerFunc {
 				message := ""
 				if errors.As(e, &validationErrors) {
 					for _, e := range validationErrors {
-						message += e.Translate(config.Trans) + ";"
+						message += e.Translate(global.TranslatorInstance) + ";"
 					}
 				} else {
 					message = e.Error()
@@ -41,7 +40,7 @@ func CustomValidation() gin.HandlerFunc {
 				errMessages = append(errMessages, message)
 			}
 			// 如果需要，可以对错误进一步处理，例如自定义返回信息
-			c.JSON(http.StatusInternalServerError, gin.H{"errors": errMessages})
+			//c.JSON(http.StatusInternalServerError, gin.H{"errors": errMessages})
 		}
 	}
 }

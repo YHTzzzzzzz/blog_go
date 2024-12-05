@@ -15,10 +15,7 @@ import (
 	"strings"
 )
 
-// Trans 创建全局的翻译器实例
-var Trans ut.Translator
-
-// InitValidator 初始化 validator 翻译器 todo 翻译器未生效
+// InitValidator 初始化 validator 翻译器 global.Translator
 func InitValidator() {
 	// 修改gin框架中的validator引擎属性，实现定制
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -38,24 +35,24 @@ func InitValidator() {
 
 		// 根据当前配置获取对应语言
 		locale := global.ServerConfigInstance.AppConfigInstance.Locale
-		Trans, ok = uni.GetTranslator(locale)
+		global.TranslatorInstance, ok = uni.GetTranslator(locale)
 		if !ok {
 			fmt.Println("Error loading translator for locale:", locale)
 		}
-		if Trans == nil {
+		if global.TranslatorInstance == nil {
 			fmt.Println("Error loading translator for locale:", locale)
-			Trans, _ = uni.GetTranslator(constants.LanguageZh) // 默认使用中文
+			global.TranslatorInstance, _ = uni.GetTranslator(constants.LanguageZh) // 默认使用中文
 		}
 
 		// 注册翻译器
 		var err error
 		switch locale {
 		case constants.LanguageEn:
-			err = enTranslations.RegisterDefaultTranslations(v, Trans)
+			err = enTranslations.RegisterDefaultTranslations(v, global.TranslatorInstance)
 		case constants.LanguageZh:
-			err = zhTranslations.RegisterDefaultTranslations(v, Trans)
+			err = zhTranslations.RegisterDefaultTranslations(v, global.TranslatorInstance)
 		default:
-			err = zhTranslations.RegisterDefaultTranslations(v, Trans)
+			err = zhTranslations.RegisterDefaultTranslations(v, global.TranslatorInstance)
 		}
 
 		if err != nil {
