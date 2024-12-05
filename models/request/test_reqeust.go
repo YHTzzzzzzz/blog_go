@@ -1,6 +1,6 @@
-package validator
+package request
 
-type LoginRequest struct {
+type TestLoginRequest struct {
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
