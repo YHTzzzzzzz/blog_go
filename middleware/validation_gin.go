@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"blog_go/pkg/config"
+	"blog_go/config"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -35,6 +35,8 @@ func CustomValidation() gin.HandlerFunc {
 					for _, e := range validationErrors {
 						message += e.Translate(config.Trans) + ";"
 					}
+				} else {
+					message = e.Error()
 				}
 				errMessages = append(errMessages, message)
 			}
@@ -42,16 +44,4 @@ func CustomValidation() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"errors": errMessages})
 		}
 	}
-}
-
-func Error(err error) (message string) {
-	var validationErrors validator.ValidationErrors
-	if !errors.As(err, &validationErrors) {
-		return err.Error()
-	} else {
-		for _, e := range validationErrors {
-			message += e.Translate(config.Trans) + ";"
-		}
-	}
-	return message
 }

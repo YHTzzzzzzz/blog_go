@@ -1,7 +1,9 @@
 package cmd
 
 import (
-	"blog_go/pkg/config"
+	"blog_go/cmd/serve"
+	"blog_go/config"
+	"blog_go/global"
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -31,11 +33,11 @@ var rootCmd = &cobra.Command{
 // tips
 func tips() {
 	welcome := fmt.Sprintf("欢迎使用 %s %s，使用 `-h`或`--help` 获取更多帮助。",
-		config.ServerConfigInstance.AppConfigInstance.Name,
-		config.ServerConfigInstance.AppConfigInstance.Version)
-	author := fmt.Sprintf("作者: %s", config.ServerConfigInstance.AuthorInfoInstance.Name)
-	email := fmt.Sprintf("邮箱: %s", config.ServerConfigInstance.AuthorInfoInstance.Email)
-	github := fmt.Sprintf("Github: %s", config.ServerConfigInstance.AuthorInfoInstance.GitHub)
+		global.ServerConfigInstance.AppConfigInstance.Name,
+		global.ServerConfigInstance.AppConfigInstance.Version)
+	author := fmt.Sprintf("作者: %s", global.ServerConfigInstance.AuthorInfoInstance.Name)
+	email := fmt.Sprintf("邮箱: %s", global.ServerConfigInstance.AuthorInfoInstance.Email)
+	github := fmt.Sprintf("Github: %s", global.ServerConfigInstance.AuthorInfoInstance.GitHub)
 	fmt.Println(welcome)
 	fmt.Println(author)
 	fmt.Println(email)
@@ -53,10 +55,9 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// 定义子命令共享标签 定义标签  config 缩写 -c 默认值 pkg/config/settings.yml 描述信息： Path to the configuration file
-	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "pkg/config/settings.yml", "Path to the configuration file")
-	//fmt.Println(configFile)
+	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "config/settings.yml", "Path to the configuration file")
 
-	rootCmd.AddCommand(serverCmd)
+	rootCmd.AddCommand(serve.NewServerCmd())
 }
 
 func initConfig() {

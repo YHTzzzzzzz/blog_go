@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"blog_go/models/request"
 	"blog_go/pkg/service"
-	"blog_go/pkg/validator"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -12,12 +12,12 @@ type AuthHandler struct {
 }
 
 func (h *AuthHandler) Login(c *gin.Context) {
-	var req validator.LoginRequest
+	var req request.LoginRequest
 
 	// 请求参数绑定结构体
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Error(err)
+		//c.Error(err) 这里是给 c.Errors() 塞内容
 		return
 	}
 

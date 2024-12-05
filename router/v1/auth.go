@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"blog_go/pkg/handler"
+	"blog_go/handler"
 	"blog_go/pkg/service"
 	"github.com/gin-gonic/gin"
 )

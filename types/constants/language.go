@@ -1,4 +1,4 @@
-package global
+package constants
 
 const (
 	// LanguageEn English
@@ -6,5 +6,3 @@ const (
 	// LanguageZh Chinese
 	LanguageZh = "zh"
 )
-
-//var Validate *validator.Validate

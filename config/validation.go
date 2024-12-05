@@ -1,7 +1,8 @@
 package config
 
 import (
-	"blog_go/pkg/global"
+	"blog_go/global"
+	"blog_go/types/constants"
 	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
@@ -14,9 +15,6 @@ import (
 	"strings"
 )
 
-// Validate 创建全局的 validator 实例
-var Validate = validator.New()
-
 // Trans 创建全局的翻译器实例
 var Trans ut.Translator
 
@@ -26,7 +24,7 @@ func InitValidator() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		// 注册获取json tag的方法
 		v.RegisterTagNameFunc(func(fld reflect.StructField) string {
-			name := strings.SplitN(fld.Tag.Get("zh"), ",", 2)[0]
+			name := strings.SplitN(fld.Tag.Get(constants.LanguageZh), ",", 2)[0]
 			if name == "-" || name == "" {
 				name = strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
 			}
@@ -39,22 +37,22 @@ func InitValidator() {
 		uni := ut.New(enT, zhT)
 
 		// 根据当前配置获取对应语言
-		locale := ServerConfigInstance.AppConfigInstance.Locale
+		locale := global.ServerConfigInstance.AppConfigInstance.Locale
 		Trans, ok = uni.GetTranslator(locale)
 		if !ok {
 			fmt.Println("Error loading translator for locale:", locale)
 		}
 		if Trans == nil {
 			fmt.Println("Error loading translator for locale:", locale)
-			Trans, _ = uni.GetTranslator(global.LanguageZh) // 默认使用中文
+			Trans, _ = uni.GetTranslator(constants.LanguageZh) // 默认使用中文
 		}
 
 		// 注册翻译器
 		var err error
 		switch locale {
-		case "en":
+		case constants.LanguageEn:
 			err = enTranslations.RegisterDefaultTranslations(v, Trans)
-		case "zh":
+		case constants.LanguageZh:
 			err = zhTranslations.RegisterDefaultTranslations(v, Trans)
 		default:
 			err = zhTranslations.RegisterDefaultTranslations(v, Trans)

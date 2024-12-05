@@ -1,8 +1,8 @@
 package router
 
 import (
-	"blog_go/pkg/middleware"
-	v1 "blog_go/pkg/router/v1"
+	"blog_go/middleware"
+	v12 "blog_go/router/v1"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,8 +16,8 @@ func InitRoutes() *gin.Engine {
 	// gin 的参数校验 使用全局中间件
 	r.Use(middleware.CustomValidation())
 
-	v1.RegisterTestRoute(r)
-	v1.RegisterAuthRoutes(r)
+	v12.RegisterTestRoute(r)
+	v12.RegisterAuthRoutes(r)
 
 	return r
 }
