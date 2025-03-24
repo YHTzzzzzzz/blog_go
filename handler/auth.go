@@ -3,8 +3,8 @@ package handler
 import (
 	"blog_go/models/request"
 	"blog_go/models/response"
-	"blog_go/pkg/service"
 	"blog_go/pkg/utils"
+	"blog_go/service"
 	"blog_go/types/constants"
 	"github.com/gin-gonic/gin"
 )

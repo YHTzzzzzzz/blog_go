@@ -5,42 +5,36 @@ go后台版本的blog网站，blog_site_go的先行版本
 ```plain_text
 /blog_go
 ├── cmd
-│   ├── migrate           # 数据库迁移命令
-│   │   └── migrate.go    # 数据库迁移命令实现
-│   ├── serve             # 启动服务器的命令
-│   │   └── server.go     # 启动服务器的命令实现
-│   └── root.go           # 根命令
+│   ├── root.go          # Cobra 命令入口文件
+│   └── serve
+│       └── server.go    # 服务器启动文件
 ├── config
-│   ├── database.go       # 数据库配置
-│   ├── general.go        # 全局配置
-│   ├── server.go         # 服务器配置
-│   ├── settings.yml      # 配置文件
-│   └── validation.go     # 验证相关配置
+│   ├── general.go      # 配置加载逻辑
+│   ├── settings.yml    # 配置文件
+│   └── validation.go   # 验证相关配置
 ├── global
-│   └── global.go         # 全局配置或全局变量
+│   └── global.go       # 全局配置或全局变量
+├── handler             # 处理请求的逻辑
+│   └── example_handler.go # 示例请求处理逻辑
 ├── middleware
-│   ├── auth.go           # 认证中间件
-│   ├── logging.go        # 日志记录中间件
-│   └── validation.go     # 验证请求参数的中间件
+│   └── validation.go   # 验证请求参数的中间件
 ├── models
-│   ├── request           # 请求结构体
-│   │   ├── login_request.go    # 登录请求结构体
-│   │   └── register_request.go # 注册请求结构体
-│   ├── article.go        # 文章数据模型
-│   └── user.go           # 用户数据模型
+│   ├── request         # 存放请求结构体
+│   │   └── example_request.go # 示例请求结构体
+│   └── response        # 存放响应结构体
+│       └── example_response.go # 示例响应结构体
 ├── pkg
-│   ├── logger            # 日志工具
-│   ├── utils             # 工具函数模块
-│   └── validator         # 自定义验证工具
+│   └── task
+│       ├── task_register.go  # 定时任务注册器
+│       └── task_example.go   # 示例任务实现
 ├── router
-│   └── routes.go         # 路由初始化
+│   └── routes.go       # 路由初始化
+├── service
+│   └── example_service.go # 示例业务逻辑实现
 ├── types
-│   ├── constants         # 常用状态码常量
-│   │   └── status_code.go # 常用状态码常量定义
-│   ├── enums             # 枚举类型定义
-│   │   └── user_role.go  # 用户角色枚举类型
-│   ├── errors            # 自定义错误类型
-│   │   └── custom_errors.go # 自定义错误类型
+│   ├── constants       # 存放常量的 .go 文件
+│   │   └── example_constants.go # 示例常量文件
+│   ├── custom_errors.go  # 自定义错误类型
 │   └── response.go       # 通用返回值结构定义
 ├── main.go               # 应用入口文件
 └── go.mod                # Go 模块文件
