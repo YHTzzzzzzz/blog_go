@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -33,7 +34,7 @@ func init() {
 	}
 }
 
-// ValidateRequest 中间件：自动验证请求体的结构体 todo 优化：错误提示信息
+// ValidateRequest 中间件：自动验证请求体的结构体
 func ValidateRequest(modelType interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 创建一个新的 model 实例 fix 请求参数不重置的bug
@@ -51,12 +52,35 @@ func ValidateRequest(modelType interface{}) gin.HandlerFunc {
 			// 使用类型断言时检查是否为 ValidationErrors 类型
 			var validationErrs validator.ValidationErrors
 			if errors.As(err, &validationErrs) {
+				construct := reflect.TypeOf(modelType)
 				var errorMessages map[string]string
 				// 遍历所有的验证错误信息，提取字段名和对应的错误信息
 				errorMessages = make(map[string]string)
 				for _, e := range validationErrs {
+					var zh string
+					if f, exist := construct.Elem().FieldByName(e.Field()); exist {
+						// 优先取 zh tag
+						if zh = f.Tag.Get("zh"); zh == "" {
+							// 其次 json tag
+							if zh = f.Tag.Get("json"); zh == "" {
+								// 最后 check tag
+								zh = e.Tag()
+							}
+						}
+					}
 					// 将字段名和错误信息添加到结果中
 					errorMessages[e.Field()] = e.Tag()
+					tag := e.Tag()
+					switch tag {
+					case "required":
+						errorMessages[e.Field()] = fmt.Sprintf("%s不能为空", zh)
+						break
+					case "inputCheck":
+						errorMessages[e.Field()] = fmt.Sprintf("%s格式不正确，输入范围[a-zA-Z0-9_]", zh)
+						break
+					default:
+						errorMessages[e.Field()] = fmt.Sprintf("%s参数异常", zh)
+					}
 				}
 				c.JSON(http.StatusBadRequest, gin.H{"error": errorMessages})
 			} else {
