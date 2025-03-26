@@ -17,13 +17,12 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	var req request.LoginRequest
 
 	// 请求参数绑定结构体
-	if err := c.ShouldBindJSON(&req); err != nil {
-		utils.JSONError(c, constants.ResponseCodeParamError, constants.DefaultEmpty, err)
+	if !utils.BindAndValidate(c, &req) {
 		return
 	}
 
 	if token, err := h.AuthService.Login(&req); err != nil {
-		utils.JSONError(c, constants.ResponseCodeInternalError, constants.DefaultEmpty, err)
+		utils.JSONError(c, constants.ResponseCodeInternalError, err)
 	} else {
 		resp := &response.LoginResponse{Token: token}
 		utils.JSONSuccess(c, "login success", resp)
