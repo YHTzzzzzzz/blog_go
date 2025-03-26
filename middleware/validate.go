@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
+	"reflect"
 	"regexp"
 )
 
@@ -26,15 +27,18 @@ init() 是 Go 语言的特殊函数，会在 包初始化时自动执行一次�
 */
 func init() {
 	// 注册自定义校验规则
-	err := validate.RegisterValidation("custom", alphanumericUnderscore)
+	err := validate.RegisterValidation("checkInput", alphanumericUnderscore)
 	if err != nil {
 		panic(errors.New("register validation failed"))
 	}
 }
 
 // ValidateRequest 中间件：自动验证请求体的结构体 todo 优化：错误提示信息
-func ValidateRequest(model interface{}) gin.HandlerFunc {
+func ValidateRequest(modelType interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// 创建一个新的 model 实例 fix 请求参数不重置的bug
+		model := reflect.New(reflect.TypeOf(modelType).Elem()).Interface()
+
 		// 从请求中绑定 JSON 数据到结构体
 		if err := c.ShouldBindJSON(&model); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数格式错误"})
