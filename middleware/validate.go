@@ -26,8 +26,8 @@ init() 是 Go 语言的特殊函数，会在 包初始化时自动执行一次�
 只要你的 middleware 包 被 import 了，init() 就会运行，无需手动调用。
 */
 func init() {
-	// 注册自定义校验规则 todo 更换 custom 无法进入 if err := validate.Struct(model); err != nil
-	err := validate.RegisterValidation("custom", alphanumericUnderscore)
+	// 注册自定义校验规则
+	err := validate.RegisterValidation("inputCheck", alphanumericUnderscore)
 	if err != nil {
 		panic(errors.New("register validation failed"))
 	}
